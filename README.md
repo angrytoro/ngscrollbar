@@ -1,0 +1,4 @@
+ngscrollbar
+===========
+
+angular directive scrollbar
