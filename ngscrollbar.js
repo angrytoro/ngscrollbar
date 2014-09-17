@@ -1,10 +1,21 @@
 /**
- * Created by marvinp
- * Date: 9/12/2014
- * Time: 1:48 PM
+ * @name ng-scrollbar
+ * @author angrytoro
+ * @since 9/12/2014
+ * @version 0.1
+ * @see https://github.com/angrytoro/ngscrollbar
+ * @copyright 2014 angrytoro
+ * @license MIT: You are free to use and modify this code for any use, on the condition that this copyright notice remains.
+ *
+ * The angular directive ng-scrollbar imitate the true browser scrollbar.
+ * It's applied to the element which set height or width attribute and the overflow is auto, but exclude body element.
+ * It's not necessary to imitate scrollbar for body element, if you use the AngularJS.
+ * suggests: don't use the directive, if you don't have to. The scrollbar which is inbuilt in browser is more highly-efficient.
+ *
+ * @todo find a solution to reset the scrollbar when the content is changed;
  */
 
-// todo 先处理垂直方向
+
 angular.module('widget.scrollbar', [])
 .directive('ngScrollbar', ['$timeout',
 	function($timeout) {
@@ -13,11 +24,11 @@ angular.module('widget.scrollbar', [])
 			transclude: true,
 			scope: {
 				scrollbarConfig: '=scrollbarConfig',
-				scrollbarX: '@',
-				scrollbarY: '@'
+				scrollbarX: '@', // the value is true or false, to configure the x scrollbar create or no create.
+				scrollbarY: '@' // the value is true or false, to configure the y scrollbar create or no create.
 			},
 			template: '<div style="position:relative;width:100%;height:100%;">\
-							<div class="ngscroll-content-container" style="position:absolute;top:0;left:0;transition: top .4s linear, left .4s linear;" ng-transclude>\
+							<div class="ngscroll-content-container" style="position:absolute;top:0;left:0;" ng-transclude>\
 							</div>\
 					   		<ng-scrollbar-x ng-if="scrollbarX || scrollbarX === undefined"></ng-scrollbar-x>\
 					   		<ng-scrollbar-y ng-if="scrollbarY || scrollbarY === undefined"></ng-scrollbar-y>\
@@ -27,44 +38,8 @@ angular.module('widget.scrollbar', [])
 				element.css('overflow', 'hidden');
 				console.log('ngScrollbar compile');
 				return function(scope, element, attrs, ctrl) {
-					console.log('ngScrollbar link');
-					var defaultConfig = {
-						dragSpeed: 1, //default browser delta value is 120 or -120
-						firefoxDragSpeed: 40, // the ff delta value is 3 or -120 when scroll
-						scrollbar: {
-							width: 6,
-							hoverWidth: 8,
-							color: 'rgba(0,0,0,.6)'
-						},
-						scrollbarContainer: {
-							width: 12,
-							color: 'rgba(0,0,0,.1)'
-						}
-					};
-
-					var config = angular.copy(angular.extend(scope.scrollbarConfig || {}, defaultConfig)), //if don't use copy the config will be the default value of scope.scrollbarConfig
-						contentElement = angular.element(element[0].querySelector('.ngscroll-content-container')),
-						contentDom = contentElement[0],
-						scrollbarMargin = (config.scrollbarContainer.width - config.scrollbar.width) / 2,
-						scrollbarHoverMargin = (config.scrollbarContainer.width - config.scrollbar.hoverWidth) / 2;
-
-					angular.extend(ctrl, {
-						getContainerElement: function() {
-							return element;
-						},
-						getContentElement: function() {
-							return contentElement;
-						},
-						getConfig: function() {
-							return config;
-						},
-						getScrollbarMargin: function() {
-							return scrollbarMargin;
-						},
-						getScrollbarHoverMargin: function() {
-							return scrollbarHoverMargin;
-						}
-					});
+					ctrl.init(element, scope.scrollbarConfig);
+					
 				};
 			}
 		};
@@ -72,7 +47,78 @@ angular.module('widget.scrollbar', [])
 ])
 .controller('scrollbarController', ['$scope', function($scope) {
 	console.log('scrollbarController');
-	// console.log($scope);
+
+	var defaultConfig = {
+		dragSpeed: 1, //default browser delta value is 120 or -120
+		autoResize: false, // if need auto resize, default false
+		show: false, // if need show when mouse not enter the container element which need scrollbar, default false.
+		scrollbar: {
+			width: 6, //scrollbar width
+			hoverWidth: 8, //scrollbar width when the mouse hover on it 
+			color: 'rgba(0,0,0,.6)' //scrollbar background color
+		},
+		scrollbarContainer: {
+			width: 12, //scrollbarContainer width 
+			color: 'rgba(0,0,0,.1)' // scrollbarContainer background 
+		}
+	};
+	var containerElement, // the element which need the directive of ngscrollbar
+		contentElement, // the element which transclude the true content
+		config, // config
+		scrollbarMargin, // the variable is used to descide the scrollbar element top or left to its parent element scrollbarContainer
+		ScrollbarHoverMargin; // the variable is used to descide the scrollbar element top or left to its parent element scrollbarContainer when the mouse hover on the scrollbar
+
+	/**
+	 * it must be called before the controller is used.
+	 * @param  {jqlite object} element         it's necessary variable
+	 * @param  {object} scrollbarConfig        the config which is defined by user
+	 * @return                 
+	 */
+	this.init = function(element, scrollbarConfig) {
+		containerElement = element;
+		config = angular.copy(angular.extend(scrollbarConfig || {}, defaultConfig));
+		contentElement = angular.element(element[0].querySelector('.ngscroll-content-container'));
+		scrollbarMargin = (config.scrollbarContainer.width - config.scrollbar.width) / 2;
+		scrollbarHoverMargin = (config.scrollbarContainer.width - config.scrollbar.hoverWidth) / 2;
+	};
+
+	angular.extend(this, {
+		/**
+		 * get the element which need the directive of ngscrollbar
+		 * @return {jqlite object} 
+		 */
+		getContainerElement: function() {
+			return containerElement;
+		},
+		/**
+		 * the element which transclude the true content
+		 * @return {jqlite object}
+		 */
+		getContentElement: function() {
+			return contentElement;
+		},
+		/**
+		 * get the config
+		 * @return {object}
+		 */
+		getConfig: function() {
+			return config;
+		},
+		/**
+		 * get the scrollbarMargin
+		 * @return {number}
+		 */
+		getScrollbarMargin: function() {
+			return scrollbarMargin;
+		},
+		/**
+		 * get the scrollbarHoverMargin
+		 * @return {number}
+		 */
+		getScrollbarHoverMargin: function() {
+			return scrollbarHoverMargin;
+		}
+	});
 }])
 .directive('ngScrollbarY', ['$timeout', function($timeout){
 	return {
@@ -89,23 +135,25 @@ angular.module('widget.scrollbar', [])
 					docEl = angular.element(document),
 					containerElement = ctrl.getContainerElement(),
 					containerDom = containerElement[0],
-					contentElement = ctrl.getContentElement(), //the container of content
-					scrollbarContainer = angular.element(containerDom.querySelector('.ngscrollbar-container-y')),
-					scrollbar = angular.element(containerDom.querySelector('.ngscrollbar-y')),
+					contentElement = ctrl.getContentElement(),
+					scrollbar = angular.element(element[0].querySelector('.ngscrollbar-y')),
 					scrollbarMargin = ctrl.getScrollbarMargin(),
 					scrollbarHoverMargin = ctrl.getScrollbarHoverMargin();
-					// containerHeight = element[0].offsetHeight, // the element which need to mock scrollbar;
-					// containerMaxHeight = element[0].style.maxHeight;
 
 				scope.styles = {
 					scrollbarContainer: {
 						position: 'absolute',
+						width: config.scrollbarContainer.width + 'px',
 						height: '100%',
+						top: 0,
+						right: 0,
 						transition: 'background .3s ease-in-out',
 						'border-radius': config.scrollbarContainer.width / 2 + 'px'
 					},
 					scrollbar: {
 						position: 'absolute',
+						width: config.scrollbar.width + 'px',
+						right: scrollbarMargin + 'px',
 						cursor: 'default',
 						opacity: 0,
 						transition: 'opacity .3s ease-in-out, border-radius .1s linear, width .1s linear, right .1s linear',
@@ -113,13 +161,6 @@ angular.module('widget.scrollbar', [])
 						'border-radius': config.scrollbar.width / 2 + 'px'
 					}
 				};
-
-				scrollbarContainer.css('width', config.scrollbarContainer.width + 'px'); // set the scrollbarContainer width;
-				// scrollbarContainer.css('height', '100%');
-				scrollbarContainer.css('top', 0); // set scrollbarContainer top
-				scrollbarContainer.css('right', 0); //set scrollbarContainer right
-				scrollbar.css('right', scrollbarMargin + 'px'); //set scrollbar right
-				scrollbar.css('width', config.scrollbar.width + 'px');
 
 				var getContentHeight = function() {
 					return contentElement[0].offsetHeight;
@@ -130,12 +171,11 @@ angular.module('widget.scrollbar', [])
 				};
 
 				var getScrollbarHeight = function() {
-					var height = Math.pow(getContainerHeight(), 2) / contentElement[0].offsetHeight - scrollbarMargin*2;
+					var height = Math.pow(getContainerHeight(), 2) / getContentHeight() - scrollbarMargin*2;
 					return height;
 				};
 
 				var isOverflow = function() {
-					// return containerMaxHeight && parseInt(containerMaxHeight, 10) >= getContentHeight() || getContentHeight() > getContainerHeight();
 					return getContentHeight() > getContainerHeight();
 				};
 
@@ -149,11 +189,11 @@ angular.module('widget.scrollbar', [])
 
 				var reset = function() {
 					if (isOverflow()) {
-						scrollbarContainer.css('display', 'block');
+						element.css('display', 'block');
 						scrollbar.css('top', scrollbarMargin + 'px'); // set scrollbar top
 						scrollbar.css('height', getScrollbarHeight() + 'px');
 					} else {
-						scrollbarContainer.css('display', 'none');
+						element.css('display', 'none');
 					}
 				};
 
@@ -188,19 +228,19 @@ angular.module('widget.scrollbar', [])
 						if (event.originalEvent !== undefined) {
 							event = event.originalEvent;
 						}
-						scroll(-event.deltaY * config.firefoxDragSpeed);
+						scroll(-event.deltaY * 40);// the ff delta value is 3 or -3 when scroll and the chrome or ie is -120 or 120, so it must multiply by 40
 					});
 				}
 
-				scrollbarContainer.on('mouseenter', function(event) {
-					scrollbarContainer.css('background', config.scrollbarContainer.color);
+				element.on('mouseenter', function(event) {
+					element.css('background', config.scrollbarContainer.color);
 					scrollbar.css('width', config.scrollbar.hoverWidth + 'px');
 					scrollbar.css('right', scrollbarHoverMargin + 'px');
 					scrollbar.css('border-radius', config.scrollbar.hoverWidth / 2 + 'px');
 				});
 
-				scrollbarContainer.on('mouseleave', function(event) {
-					scrollbarContainer.css('background', 'none');
+				element.on('mouseleave', function(event) {
+					element.css('background', 'none');
 					scrollbar.css('width', config.scrollbar.width + 'px');
 					scrollbar.css('right', scrollbarMargin + 'px');
 					scrollbar.css('border-radius', config.scrollbar.width / 2 + 'px');
@@ -261,12 +301,9 @@ angular.module('widget.scrollbar', [])
 					containerElement = ctrl.getContainerElement(),
 					containerDom = containerElement[0],
 					contentElement = ctrl.getContentElement(), //the container of content
-					// scrollbarContainer = angular.element(containerDom.querySelector('.ngscrollbar-container-x')),
 					scrollbar = angular.element(element[0].querySelector('.ngscrollbar-x')),
 					scrollbarMargin = ctrl.getScrollbarMargin(),
 					scrollbarHoverMargin = ctrl.getScrollbarHoverMargin();
-					// containerHeight = element[0].offsetHeight, // the element which need to mock scrollbar;
-					// containerMaxHeight = element[0].style.maxHeight;
 
 				scope.styles = {
 					scrollbarContainer: {
@@ -286,7 +323,6 @@ angular.module('widget.scrollbar', [])
 				};
 
 				element.css('height', config.scrollbarContainer.width + 'px'); // set the scrollbarContainer height;
-				// scrollbarContainer.css('height', '100%');
 				element.css('bottom', 0); // set scrollbarContainer top
 				element.css('left', 0); //set scrollbarContainer left
 				scrollbar.css('top', scrollbarMargin + 'px'); //set scrollbar top
