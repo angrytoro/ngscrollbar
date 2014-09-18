@@ -190,8 +190,9 @@ angular.module('widget.scrollbar', [])
 				var reset = function() {
 					if (isOverflow()) {
 						element.css('display', 'block');
-						scrollbar.css('top', scrollbarMargin + 'px'); // set scrollbar top
 						scrollbar.css('height', getScrollbarHeight() + 'px');
+						scrollTo(parseInt(contentElement.css('top'), 10));
+						// scrollbar.css('top', scrollbarMargin + 'px'); // set scrollbar top
 					} else {
 						element.css('display', 'none');
 					}
@@ -282,7 +283,20 @@ angular.module('widget.scrollbar', [])
 					}
 				});
 
-				$timeout(reset,5);
+				$timeout(function() {
+					reset();
+					if (!!document.createStyleSheet) { //if the browser is ie browser
+						contentElement.on('DOMNodeInserted', reset);
+						contentElement.on('DOMNodeRemoved', reset);
+					} else {
+						var observer = new MutationObserver(function(mutations){
+							if (mutations.length) {
+								reset();
+							}
+						});
+						observer.observe(contentElement[0], {childList:true, subtree: true});
+					}
+				}, 5);
 			}
 		}
 	};
@@ -355,8 +369,9 @@ angular.module('widget.scrollbar', [])
 				var reset = function() {
 					if (isOverflow()) {
 						element.css('display', 'block');
-						scrollbar.css('left', scrollbarMargin + 'px');
 						scrollbar.css('width', getScrollbarWidth() + 'px');
+						// scrollbar.css('left', scrollbarMargin + 'px');
+						scrollTo(parseInt(contentElement.css('left'), 10));
 					} else {
 						element.css('display', 'none');
 					}
@@ -423,7 +438,20 @@ angular.module('widget.scrollbar', [])
 					}
 				});
 
-				$timeout(reset,5);
+				$timeout(function() {
+					reset();
+					if (!!document.createStyleSheet) { //if the browser is ie browser
+						contentElement.on('DOMNodeInserted', reset);
+						contentElement.on('DOMNodeRemoved', reset);
+					} else {
+						var observer = new MutationObserver(function(mutations){
+							if (mutations.length) {
+								reset();
+							}
+						});
+						observer.observe(contentElement[0], {childList:true, subtree: true});
+					}
+				}, 5);
 			};
 		}
 	}
