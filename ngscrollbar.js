@@ -6,13 +6,54 @@
  * @beta 0.2
  * @see https://github.com/angrytoro/ngscrollbar
  * @copyright 2014 angrytoro
- * @license MIT: You are free to use and modify this code for any use, on the condition that this copyright notice remains.
+ * @license MIT: You are free to use and modify this code, on the condition that this copyright notice remains.
  *
- * The angular directive ng-scrollbar imitate the true browser scrollbar.
+ * @todo the directive can't deal with the element with attribute of max-height or max-width or both of them. If anybody find a solution please tell me.
+ *
+ * @description The angular directive ng-scrollbar imitate the true browser scrollbar.
  * It's applied to the element which set height or width attribute and the overflow is auto, but exclude body element.
  * It's not necessary to imitate scrollbar for body element, if you use the AngularJS.
  * suggests: don't use the directive, if you don't have to. The scrollbar which is inbuilt in browser is more highly-efficient.
  *AngularJS is not fit for IE which version is less then 9, so the directive is not fit the IE(8,7,6,5).
+ *
+ *
+ * @example
+ * 1.
+ * <div style="height:300px;overflow:auto;" ng-scrollbar>
+ *     <li ng-repeat="item in items">item</li>
+ * </div>
+ * 2.
+ * <div style="height:300px;overflow:auto;" ng-scrollbar scrollbar-x="false" scrollbar-y="true" scrollbar-config="{show:true, autoResize: true, dragSpeed: 1.2}">
+ *     <li ng-repeat="item in items">item</li>
+ * </div>
+ * 3.
+ * <div ng-scrollbar>
+ *     <div style="height:400px;width:3000px"></div>
+ * </div>
+ *
+ * @conf spec
+ * scrollbar-x the value is true or false, to configure the x scrollbar create or no create, the default value is true. but the directive can decide whether it need be created if user not set the attribute.
+ *
+ * scrollbar-y the value is true or false, to configure the y scrollbar create or no create, the default value is true. but the directive can decide whether it need be created if user not set the attribute.
+ *
+ * scrollbar-config 
+ * default config is
+ *
+ * {
+ *      dragSpeed: 1, //default browser delta value is 120 or -120
+        autoResize: false, // if need auto resize, default false
+        show: false, // if need show when mouse not enter the container element which need scrollbar, default false.
+        scrollbar: {
+            width: 6, //scrollbar width
+            hoverWidth: 8, //scrollbar width when the mouse hover on it 
+            color: 'rgba(0,0,0,.6)' //scrollbar background color
+        },
+        scrollbarContainer: {
+            width: 12, //scrollbarContainer width 
+            color: 'rgba(0,0,0,.1)' // scrollbarContainer background 
+        }
+ * }
+ *
  */
 
 
