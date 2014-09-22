@@ -8,8 +8,6 @@
  * @copyright 2014 angrytoro
  * @license MIT: You are free to use and modify this code, on the condition that this copyright notice remains.
  *
- * @todo the directive can't deal with the element with attribute of max-height or max-width or both of them. If anybody find a solution please tell me.
- *
  * @description The angular directive ng-scrollbar imitate the true browser scrollbar.
  * It's applied to the element which set height or width attribute and the overflow is auto, but exclude body element.
  * It's not necessary to imitate scrollbar for body element, if you use the AngularJS.
@@ -229,10 +227,12 @@ angular.module('widget.scrollbar', [])
                 }
 
                 var reset = function() {
+                    var oldMarginTop = parseInt(contentElement.css('margin-top'), 10);
+                    contentElement.css('margin-top', '0px'); // this is for the element which has the attribute of max-height
                     if (isOverflow()) {
                         element.css('display', 'block');
                         scrollbar.css('height', getScrollbarHeight() + 'px');
-                        scrollTo(parseInt(contentElement.css('margin-top'), 10));
+                        scrollTo(oldMarginTop);
                         if (config.show) {
                             showScrollbar();
                         }
@@ -412,10 +412,12 @@ angular.module('widget.scrollbar', [])
                 };
 
                 var reset = function() {
+                    var oldMarginLeft = parseInt(contentElement.css('margin-left'), 10);
+                    contentElement.css('margin-left', '0px');
                     if (isOverflow()) {
                         element.css('display', 'block');
                         scrollbar.css('width', getScrollbarWidth() + 'px');
-                        scrollTo(parseInt(contentElement.css('margin-left'), 10));
+                        scrollTo(oldMarginLeft);
                         if (config.show) {
                             showScrollbar();
                         }
