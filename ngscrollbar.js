@@ -69,7 +69,7 @@ angular.module('widget.scrollbar', [])
                 scrollbarY: '@' // the value is true or false, to configure the y scrollbar create or no create.
             },
             template: '<div style="position:relative;width:100%;height:100%;">\
-                            <div class="ngscroll-content-container" style="position:absolute;top:0;left:0;" ng-transclude>\
+                            <div class="ngscroll-content-container" style="display:inline-block;margin-top:0;margin-left:0" ng-transclude>\
                             </div>\
                             <ng-scrollbar-x ng-if="scrollbarX || scrollbarX === undefined"></ng-scrollbar-x>\
                             <ng-scrollbar-y ng-if="scrollbarY || scrollbarY === undefined"></ng-scrollbar-y>\
@@ -232,7 +232,7 @@ angular.module('widget.scrollbar', [])
                     if (isOverflow()) {
                         element.css('display', 'block');
                         scrollbar.css('height', getScrollbarHeight() + 'px');
-                        scrollTo(parseInt(contentElement.css('top'), 10));
+                        scrollTo(parseInt(contentElement.css('margin-top'), 10));
                         if (config.show) {
                             showScrollbar();
                         }
@@ -243,12 +243,12 @@ angular.module('widget.scrollbar', [])
 
                 var scrollTo = function(top) {
                     top = Math.min(0, Math.max(top, getContainerHeight() - getContentHeight()));
-                    contentElement.css('top', top + 'px');
+                    contentElement.css('margin-top', top + 'px');
                     scrollbar.css('top', -top/getContentHeight()*getContainerHeight() + scrollbarMargin + 'px');
                 };
 
                 var scroll = function(distance) {
-                    var newTop = parseInt(contentElement.css('top'), 10) + distance;
+                    var newTop = parseInt(contentElement.css('margin-top'), 10) + distance;
                     scrollTo(newTop);
                 };
 
@@ -415,7 +415,7 @@ angular.module('widget.scrollbar', [])
                     if (isOverflow()) {
                         element.css('display', 'block');
                         scrollbar.css('width', getScrollbarWidth() + 'px');
-                        scrollTo(parseInt(contentElement.css('left'), 10));
+                        scrollTo(parseInt(contentElement.css('margin-left'), 10));
                         if (config.show) {
                             showScrollbar();
                         }
@@ -426,12 +426,12 @@ angular.module('widget.scrollbar', [])
 
                 var scrollTo = function(left) {
                     left = Math.min(0, Math.max(left, getContainerWidth() - getContentWidth()));
-                    contentElement.css('left', left + 'px');
+                    contentElement.css('margin-left', left + 'px');
                     scrollbar.css('left', -left/getContentWidth()*getContainerWidth() + scrollbarMargin + 'px');
                 };
 
                 var scroll = function(distance) {
-                    var left = parseInt(contentElement.css('left'), 10) + distance;
+                    var left = parseInt(contentElement.css('margin-left'), 10) + distance;
                     scrollTo(left);
                 };
 
