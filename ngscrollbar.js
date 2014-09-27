@@ -54,10 +54,9 @@
  *
  */
 
-
 angular.module('widget.scrollbar', [])
-.directive('ngScrollbar', ['$timeout',
-    function($timeout) {
+.directive('ngScrollbar', [
+    function() {
         return {
             restrict: 'AE',
             transclude: true,
@@ -73,9 +72,8 @@ angular.module('widget.scrollbar', [])
                             <ng-scrollbar-y ng-if="scrollbarY || scrollbarY === undefined"></ng-scrollbar-y>\
                        </div>',
             controller: 'scrollbarController',
-            compile: function(element, attrs) {
+            compile: function(element) {
                 element.css('overflow', 'hidden');
-                console.log('ngScrollbar compile');
                 return function(scope, element, attrs, ctrl) {
                     ctrl.init(element, scope.scrollbarConfig);
                     
@@ -84,8 +82,7 @@ angular.module('widget.scrollbar', [])
         };
     }
 ])
-.controller('scrollbarController', ['$scope', function($scope) {
-    console.log('scrollbarController');
+.controller('scrollbarController', [function() {
 
     var defaultConfig = {
         dragSpeed: 1, //default browser delta value is 120 or -120
@@ -105,7 +102,7 @@ angular.module('widget.scrollbar', [])
         contentElement, // the element which transclude the true content
         config, // config
         scrollbarMargin, // the variable is used to descide the scrollbar element top or left to its parent element scrollbarContainer
-        ScrollbarHoverMargin; // the variable is used to descide the scrollbar element top or left to its parent element scrollbarContainer when the mouse hover on the scrollbar
+        scrollbarHoverMargin; // the variable is used to descide the scrollbar element top or left to its parent element scrollbarContainer when the mouse hover on the scrollbar
 
     /**
      * it must be called before the controller is used.
@@ -165,15 +162,12 @@ angular.module('widget.scrollbar', [])
         require: '^ngScrollbar',
         replace: true,
         template: '<div class="ngscrollbar-container-y" ng-style="styles.scrollbarContainer"><div class="ngscrollbar-y" ng-style="styles.scrollbar"></div></div>',
-        compile: function(element, attrs) {
-            console.log('ngScrollbarY compile');
+        compile: function() {
             return function(scope, element, attrs, ctrl) {
-                console.log('ngScrollbarY link');
 
                 var config = ctrl.getConfig(),
                     docEl = angular.element(document),
                     containerElement = ctrl.getContainerElement(),
-                    containerDom = containerElement[0],
                     contentElement = ctrl.getContentElement(),
                     scrollbar = angular.element(element[0].querySelector('.ngscrollbar-y')),
                     scrollbarMargin = ctrl.getScrollbarMargin(),
@@ -224,7 +218,7 @@ angular.module('widget.scrollbar', [])
 
                 var showScrollbar = function() {
                     scrollbar.css('opacity', 1);
-                }
+                };
 
                 var reset = function() {
                     var oldMarginTop = parseInt(contentElement.css('margin-top'), 10);
@@ -276,14 +270,14 @@ angular.module('widget.scrollbar', [])
                     });
                 }
 
-                element.on('mouseenter', function(event) {
+                element.on('mouseenter', function() {
                     element.css('background', config.scrollbarContainer.color);
                     scrollbar.css('width', config.scrollbar.hoverWidth + 'px');
                     scrollbar.css('right', scrollbarHoverMargin + 'px');
                     scrollbar.css('border-radius', config.scrollbar.hoverWidth / 2 + 'px');
                 });
 
-                element.on('mouseleave', function(event) {
+                element.on('mouseleave', function() {
                     element.css('background', 'none');
                     scrollbar.css('width', config.scrollbar.width + 'px');
                     scrollbar.css('right', scrollbarMargin + 'px');
@@ -295,11 +289,11 @@ angular.module('widget.scrollbar', [])
                     mouseInElement = false;
 
                 if (!config.show) {
-                    containerElement.on('mouseenter', function(event) {
+                    containerElement.on('mouseenter', function() {
                         mouseInElement = true;
                         showScrollbar();
                     });
-                    containerElement.on('mouseleave', function(event) {
+                    containerElement.on('mouseleave', function() {
                         mouseInElement = false;
                         if (scrollbarMousedown) {
                             return;
@@ -312,7 +306,7 @@ angular.module('widget.scrollbar', [])
                     event.preventDefault();
                     axisY = event.screenY;
                     scrollbarMousedown = true;
-                    docEl.one('mouseup', function(event) {
+                    docEl.one('mouseup', function() {
                         scrollbarMousedown = false;
                         if (!config.show && !mouseInElement) {
                             hideScrollbar();
@@ -342,7 +336,7 @@ angular.module('widget.scrollbar', [])
                         observer.observe(contentElement[0], {childList:true, subtree: true});
                     }
                 }, 5);
-            }
+            };
         }
     };
 }])
@@ -352,7 +346,7 @@ angular.module('widget.scrollbar', [])
         replace: true,
         require: '^ngScrollbar',
         template: '<div class="ngscrollbar-container-x" ng-style="styles.scrollbarContainer"><div class="ngscrollbar-x" ng-style="styles.scrollbar"></div></div>',
-        compile: function(element, attrs) {
+        compile: function() {
             return function(scope, element, attrs, ctrl) {
 
                 var config = ctrl.getConfig(),
@@ -437,14 +431,14 @@ angular.module('widget.scrollbar', [])
                     scrollTo(left);
                 };
 
-                element.on('mouseenter', function(event) {
+                element.on('mouseenter', function() {
                     element.css('background', config.scrollbarContainer.color);
                     scrollbar.css('height', config.scrollbar.hoverWidth + 'px');
                     scrollbar.css('top', scrollbarHoverMargin + 'px');
                     scrollbar.css('border-radius', config.scrollbar.hoverWidth / 2 + 'px');
                 });
 
-                element.on('mouseleave', function(event) {
+                element.on('mouseleave', function() {
                     element.css('background', 'none');
                     scrollbar.css('height', config.scrollbar.width + 'px');
                     scrollbar.css('top', scrollbarMargin + 'px');
@@ -456,11 +450,11 @@ angular.module('widget.scrollbar', [])
                     mouseInElement = false;
 
                 if (!config.show) {
-                    containerElement.on('mouseenter', function(event) {
+                    containerElement.on('mouseenter', function() {
                         mouseInElement = true;
                         showScrollbar();
                     });
-                    containerElement.on('mouseleave', function(event) {
+                    containerElement.on('mouseleave', function() {
                         mouseInElement = false;
                         if (scrollbarMousedown) {
                             return;
@@ -473,7 +467,7 @@ angular.module('widget.scrollbar', [])
                     event.preventDefault();
                     scrollbarMousedown = true;
                     axisX = event.screenX;
-                    docEl.one('mouseup', function(event) {
+                    docEl.one('mouseup', function() {
                         scrollbarMousedown = false;
                         if (!config.show && !mouseInElement) {
                             hideScrollbar();
