@@ -9,3 +9,19 @@ AngularJS is not fit for IE which version is less then 9, so the directive is no
 
 I will write the example in the later.
 Welcome comments
+
+###some case
+```
+1.
+<div style="height:300px;overflow:auto;" ng-scrollbar>
+    <li ng-repeat="item in items">item</li>
+</div>
+2.
+<div style="height:300px;overflow:auto;" ng-scrollbar scrollbar-x="false" scrollbar-y="true" scrollbar-config="{show:true, autoResize: true, dragSpeed: 1.2}">
+    <li ng-repeat="item in items">item</li>
+</div>
+3.
+<div ng-scrollbar>
+    <div style="height:400px;width:3000px"></div>
+</div>
+```
