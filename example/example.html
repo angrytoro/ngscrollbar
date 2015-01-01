@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html ng-app="demonApp">
+<head>
+	<title>ngScrollbar</title>
+	<meta content="text/html; charset=UTF-8" http-equiv="content-type">
+	<link rel="stylesheet" type="text/css" href="../components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="example.css">
+</head>
+<body ng-controller="demonController">
+	<header class="navbar navbar-default navbar-fixed-top">
+		<div class="container text-center">
+			<button class="btn btn-primary navbar-btn" ng-click="addItem()">Add Item</button>
+			<button class="btn btn-danger navbar-btn" ng-click="removeItem()">Remove Item</button>
+		</div>
+	</header>
+	<div class="container">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h4>always show scrollbar</h4>
+			</div>
+			<div class="panel-body">
+				<div class="list-container">
+					<div class="list" ng-scrollbar scrollbar-x="false" scrollbar-y="true" scrollbar-config="{show: true}">
+						<div class="item" ng-repeat="item in items">
+							<p>{{item.id}}</p>
+							<p>{{item.name}}</p>
+							<p>{{item.introduction}}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h4>scrollbar will be showd when mouse hover</h4>
+			</div>
+			<div class="panel-body">
+				<div class="list-container">
+					<div class="list" ng-scrollbar scrollbar-config="{show: false}">
+						<div style="height:100%;width:3000px;">
+							<div class="item" ng-repeat="item in items">
+								<p>{{item.id}}</p>
+								<p>{{item.name}}</p>
+								<p>{{item.introduction}}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h4>the simplest demon</h4>
+			</div>
+			<div class="panel-body">
+				<div class="list-container">
+					<div class="list" ng-scrollbar>
+						<div style="height:100%;width:3000px;">
+							<div class="item" ng-repeat="item in items">
+								<p>{{item.id}}</p>
+								<p>{{item.name}}</p>
+								<p>{{item.introduction}}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="../components/angular/angular.min.js"></script>
+	<script type="text/javascript" src="../ngscrollbar.js"></script>
+	<script type="text/javascript" src="example.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "ngScrollbar",
+  "description": "imitate browser scrollbar",
+  "version": "0.0.1",
+  "ignore": [
+    "**/.*",
+    "components",
+    "example"
+  ],
+  "devDependencies": {
+    "angular": "1.2.16",
+    "bootstrap": "3.3.1"
+  }
+}
