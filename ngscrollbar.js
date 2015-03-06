@@ -34,7 +34,7 @@
  *
  * scrollbar-y the value is true or false, to configure the y scrollbar create or no create, the default value is true. but the directive can decide whether it need be created if user not set the attribute.
  *
- * scrollbar-config 
+ * scrollbar-config
  * default config is
  *
  * {
@@ -43,12 +43,12 @@
         show: false, // if need show when mouse not enter the container element which need scrollbar, default false.
         scrollbar: {
             width: 6, //scrollbar width
-            hoverWidth: 8, //scrollbar width when the mouse hover on it 
+            hoverWidth: 8, //scrollbar width when the mouse hover on it
             color: 'rgba(0,0,0,.6)' //scrollbar background color
         },
         scrollbarContainer: {
-            width: 12, //scrollbarContainer width 
-            color: 'rgba(0,0,0,.1)' // scrollbarContainer background 
+            width: 12, //scrollbarContainer width
+            color: 'rgba(0,0,0,.1)' // scrollbarContainer background
         }
  * }
  *
@@ -76,7 +76,7 @@ angular.module('widget.scrollbar', [])
                 element.css('overflow', 'hidden');
                 return function(scope, element, attrs, ctrl) {
                     ctrl.init(element, scope.scrollbarConfig);
-                    
+
                 };
             }
         };
@@ -90,12 +90,12 @@ angular.module('widget.scrollbar', [])
         show: false, // if need show when mouse not enter the container element which need scrollbar, default false.
         scrollbar: {
             width: 6, //scrollbar width
-            hoverWidth: 8, //scrollbar width when the mouse hover on it 
+            hoverWidth: 8, //scrollbar width when the mouse hover on it
             color: 'rgba(0,0,0,.6)' //scrollbar background color
         },
         scrollbarContainer: {
-            width: 12, //scrollbarContainer width 
-            color: 'rgba(0,0,0,.1)' // scrollbarContainer background 
+            width: 12, //scrollbarContainer width
+            color: 'rgba(0,0,0,.1)' // scrollbarContainer background
         }
     };
     var containerElement, // the element which need the directive of ngscrollbar
@@ -108,7 +108,7 @@ angular.module('widget.scrollbar', [])
      * it must be called before the controller is used.
      * @param  {jqlite object} element         it's necessary variable
      * @param  {object} scrollbarConfig        the config which is defined by user
-     * @return                 
+     * @return
      */
     this.init = function(element, scrollbarConfig) {
         containerElement = element;
@@ -121,7 +121,7 @@ angular.module('widget.scrollbar', [])
     angular.extend(this, {
         /**
          * get the element which need the directive of ngscrollbar
-         * @return {jqlite object} 
+         * @return {jqlite object}
          */
         getContainerElement: function() {
             return containerElement;
@@ -336,6 +336,24 @@ angular.module('widget.scrollbar', [])
                         observer.observe(contentElement[0], {childList:true, subtree: true});
                     }
                 }, 5);
+
+                // Redraw the scrollbar when window size changes.
+                if (config.autoResize) {
+                  // Closure to guard against leaking variables.
+                  (function () {
+                    var redrawTimer;
+
+                    ctrl.winEl.on('resize', function (e) {
+                      if (redrawTimer) {
+                        clearTimeout(redrawTimer);
+                      }
+                      redrawTimer = setTimeout(function () {
+                        redrawTimer = null;
+                        reset();
+                      }, 50);
+                    });
+                  })();
+                }
             };
         }
     };
@@ -497,6 +515,24 @@ angular.module('widget.scrollbar', [])
                         observer.observe(contentElement[0], {childList:true, subtree: true});
                     }
                 }, 5);
+
+                // Redraw the scrollbar when window size changes.
+                if (config.autoResize) {
+                  // Closure to guard against leaking variables.
+                  (function () {
+                    var redrawTimer;
+
+                    ctrl.winEl.on('resize', function (e) {
+                      if (redrawTimer) {
+                        clearTimeout(redrawTimer);
+                      }
+                      redrawTimer = setTimeout(function () {
+                        redrawTimer = null;
+                        reset();
+                      }, 50);
+                    });
+                  })();
+                }
             };
         }
     };
