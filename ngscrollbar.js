@@ -120,6 +120,10 @@ angular.module('widget.scrollbar', [])
 
     angular.extend(this, {
         /**
+         * Wrap window in an angular jqLite object.
+         */
+        winEl: angular.element(window),
+        /**
          * get the element which need the directive of ngscrollbar
          * @return {jqlite object}
          */
