@@ -25,6 +25,8 @@ Welcome comments
     <div style="height:400px;width:3000px"></div>
 </div>
 ```
+![image](https://github.com/angrytoro/ngscrollbar/raw/master/example/ngsrollar1.gif)
+![image](https://github.com/angrytoro/ngscrollbar/raw/master/example/ngsrollar2.gif)
 
 ### how to view the example
 1. bower install
