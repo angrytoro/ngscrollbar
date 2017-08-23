@@ -452,6 +452,30 @@ angular.module('widget.scrollbar', [])
                     var left = parseInt(contentElement.css('margin-left'), 10) + distance;
                     scrollTo(left);
                 };
+                
+                containerElement.on('mousewheel', function(event) {
+                    if (!isOverflow()) {
+                        return;
+                    }
+                    event.preventDefault();
+                    if (event.originalEvent !== undefined) {
+                        event = event.originalEvent;
+                    }
+                    scroll(event.wheelDeltaX || event.wheelDelta);
+                });
+
+                if(window.navigator.userAgent.toLowerCase().indexOf('firefox') >= 0) {
+                    containerElement.on('wheel', function(event) {
+                        if (!isOverflow()) {
+                            return;
+                        }
+                        event.preventDefault();
+                        if (event.originalEvent !== undefined) {
+                            event = event.originalEvent;
+                        }
+                        scroll(-event.deltaX * 40);// the ff delta value is 3 or -3 when scroll and the chrome or ie is -120 or 120, so it must multiply by 40
+                    });
+                }
 
                 element.on('mouseenter', function() {
                     element.css('background', config.scrollbarContainer.color);
